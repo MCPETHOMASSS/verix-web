@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VERIX - 简奢科技体验</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-bg: #0d0d0d;
+            --secondary-bg: #1a1a1a;
+            --accent-blue: #0066cc;
+            --accent-gold: #d4af37;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* 质感文字效果 */
+        .premium-text {
+            position: relative;
+            color: white;
+        }
+        
+        .premium-text::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                transparent 100%
+            );
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
+        }
+        
+        .silver-text {
+            background: linear-gradient(to bottom, #ffffff, #c0c0c0, #ffffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: rgba(13, 13, 13, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 灵动岛 */
+        .dynamic-island {
+            background: rgba(66, 66, 66, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .dynamic-island:hover {
+            background: rgba(102, 102, 102, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        /* 滚动转场效果 */
+        .transition-container {
+            position: relative;
+            height: 300vh;
+        }
+        
+        .transition-sticky {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .transition-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: width 0.1s ease-out;
+        }
+        
+        .transition-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.3);
+            z-index: 10;
+        }
+        
+        /* 固定与滚动混合布局 */
+        .fixed-scroll-section {
+            min-height: 300vh;
+            display: flex;
+        }
+        
+        .scroll-content {
+            width: 50%;
+        }
+        
+        .fixed-content {
+            width: 50%;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .feature-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 5%;
+        }
+        
+        .feature-image {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
+        
+        .feature-image.active {
+            opacity: 1;
+        }
+        
+        /* 产品卡片 */
+        .product-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 全屏抽屉 */
+        .drawer {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            visibility: hidden;
+        }
+        
+        .drawer-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .drawer-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 90vh;
+            background: var(--primary-bg);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .drawer.active .drawer-backdrop {
+            opacity: 1;
+        }
+        
+        .drawer.active .drawer-content {
+            transform: translateY(0);
+        }
+        
+        .drawer.active {
+            visibility: visible;
+        }
+        
+        /* 按钮样式 */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), #004499);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 102, 204, 0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: var(--secondary-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loader-circle {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .fixed-scroll-section {
+                flex-direction: column;
+            }
+            
+            .scroll-content, .fixed-content {
+                width: 100%;
+            }
+            
+            .fixed-content {
+                height: 50vh;
+            }
+            
+            .feature-section {
+                height: 50vh;
+            }
+            
+            .premium-text {
+                font-size: 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loader" id="loader">
+        <div class="loader-circle"></div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar fixed top-0 left-0 right-0 z-50 py-4">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold silver-text">VERIX</h1>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#products" class="text-gray-300 hover:text-white transition-colors">产品</a>
+                <a href="#features" class="text-gray-300 hover:text-white transition-colors">特性</a>
+                <a href="#technology" class="text-gray-300 hover:text-white transition-colors">技术</a>
+                <a href="#contact" class="text-gray-300 hover:text-white transition-colors">联系我们</a>
+            </div>
+            <div class="md:hidden">
+                <button class="text-white" id="menu-toggle">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 移动端菜单 -->
+    <div class="fixed inset-0 bg-black bg-opacity-90 z-40 hidden" id="mobile-menu">
+        <div class="flex justify-end p-6">
+            <button class="text-white" id="menu-close">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="flex flex-col items-center space-y-6">
+            <a href="#products" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">产品</a>
+            <a href="#features" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">特性</a>
+            <a href="#technology" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">技术</a>
+            <a href="#contact" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">联系我们</a>
+        </div>
+    </div>
+
+    <!-- 英雄区域 -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-black"></div>
+        <div class="container mx-auto px-6 text-center relative z-10">
+            <h1 class="premium-text text-6xl md:text-8xl font-bold mb-6" data-text="VERIX">VERIX</h1>
+            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                简奢科技，重新定义智能生活体验
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button class="btn-primary" onclick="openDrawer('productDetails')">
+                    探索产品 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button class="btn-secondary" onclick="scrollToSection('features')">
+                    了解更多
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
+            <i class="fas fa-chevron-down text-white/50 text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- 滚动转场效果 -->
+    <section class="transition-container" id="transition-container">
+        <div class="transition-sticky">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" 
+                 alt="VERIX 智能手表" 
+                 class="transition-image z-30" 
+                 id="image1">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
+                 alt="VERIX 无线耳机" 
+                 class="transition-image z-20" 
+                 id="image2">
+            <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4f484b78e0d042cb9325a840b3611252~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=GJ3DRjrBYSUzz6RbzytirqeLXyY%3D" 
+                 alt="VERIX 智能家庭中枢" 
+                 class="transition-image z-10" 
+                 id="image3">
+            <div class="transition-line z-40" id="transition-line"></div>
+        </div>
+    </section>
+
+    <!-- 固定与滚动混合布局 -->
+    <section class="fixed-scroll-section" id="features">
+        <div class="scroll-content">
+            <div class="feature-section" data-section="1">
+                <h3 class="text-3xl font-bold mb-6 silver-text">隐形智能</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    VERIX 动态跟踪系统算法让智能设备在不打扰您的情况下，
+                    精准识别和预测您的需求，提供无缝的智能体验。
+                </p>
+                <button class="btn-primary" onclick="openDrawer('featureDetails1')">
+                    了解详情 <i class="fas fa-plus ml-2"></i>
+                </button>
+            </div>
+            <div class="feature-section" data-section="2">
+                <h3 class="text-3xl font-bold mb-6 silver-text">实时处理</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    采用先进的边缘计算技术，所有数据在设备本地实时处理，
+                    确保隐私安全的同时提供即时响应。
+                </p>
+                <button class="btn-primary" onclick="openDrawer('featureDetails2')">
+                    技术规格 <i class="fas fa-plus ml-2"></i>
+                </button>
+            </div>
+            <div class="feature-section" data-section="3">
+                <h3 class="text-3xl font-bold mb-6 silver-text">精工设计</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    每一款 VERIX 产品都融合了极简主义美学与精湛工艺，
+                    成为您生活中不可或缺的优雅配饰。
+                </p>
+                <button class="btn-primary" onclick="openDrawer('featureDetails3')">
+                    设计理念 <i class="fas fa-plus ml-2"></i>
+                </button>
+            </div>
+        </div>
+        <div class="fixed-content">
+            <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/26d120e0ab294382a92460bb27ff1c94~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312922&x-signature=Hq5auniil8%2FVWZ%2B8Ic42HwlvuvU%3D" 
+                 alt="健康监测" 
+                 class="feature-image" 
+                 data-image="1">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
+                 alt="音频体验" 
+                 class="feature-image" 
+                 data-image="2">
+            <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/3cc50d58fc354180944129486231d30c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=2PXY7JwfTDPcLmD0nLrGp3oQHvs%3D" 
+                 alt="运动追踪" 
+                 class="feature-image" 
+                 data-image="3">
+        </div>
+    </section>
+
+    <!-- 产品展示 -->
+    <section class="py-20" id="products">
+        <div class="container mx-auto px-6">
+            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="VERIX 产品系列">VERIX 产品系列</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 产品卡片 1 -->
+                <div class="product-card rounded-2xl p-8 text-center">
+                    <div class="mb-8">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" 
+                             alt="VERIX Watch" 
+                             class="w-48 h-48 object-contain mx-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Watch</h3>
+                    <p class="text-gray-400 mb-6">简奢智能手表，融合经典设计与前沿科技</p>
+                    <div class="flex justify-center">
+                        <button class="btn-primary" onclick="openDrawer('productWatch')">
+                            探索 <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 产品卡片 2 -->
+                <div class="product-card rounded-2xl p-8 text-center">
+                    <div class="mb-8">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
+                             alt="VERIX Audio" 
+                             class="w-48 h-48 object-contain mx-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Audio</h3>
+                    <p class="text-gray-400 mb-6">真无线蓝牙耳机，沉浸式音频体验</p>
+                    <div class="flex justify-center">
+                        <button class="btn-primary" onclick="openDrawer('productAudio')">
+                            探索 <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 产品卡片 3 -->
+                <div class="product-card rounded-2xl p-8 text-center">
+                    <div class="mb-8">
+                        <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4f484b78e0d042cb9325a840b3611252~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=GJ3DRjrBYSUzz6RbzytirqeLXyY%3D" 
+                             alt="VERIX Home" 
+                             class="w-48 h-48 object-contain mx-auto">
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Home</h3>
+                    <p class="text-gray-400 mb-6">智能家庭中枢，掌控您的智慧生活</p>
+                    <div class="flex justify-center">
+                        <button class="btn-primary" onclick="openDrawer('productHome')">
+                            探索 <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 技术展示 -->
+    <section class="py-20 bg-gradient-to-b from-black to-gray-900" id="technology">
+        <div class="container mx-auto px-6">
+            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="隐形智能技术">隐形智能技术</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 silver-text">动态跟踪系统算法</h3>
+                    <p class="text-gray-300 mb-6 text-lg">
+                        VERIX 专有的动态跟踪系统算法能够实时分析用户行为模式，
+                        通过先进的机器学习技术，预测用户需求并提供个性化服务。
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
+                            <span>实时行为识别与分析</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
+                            <span>本地数据处理，保障隐私安全</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
+                            <span>自适应学习，持续优化体验</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
+                            <span>低功耗设计，超长续航时间</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="aspect-square rounded-2xl overflow-hidden border border-gray-800">
+                        <canvas id="techCanvas" class="w-full h-full"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section class="py-20" id="contact">
+        <div class="container mx-auto px-6">
+            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="联系我们">联系我们</h2>
+            <div class="max-w-3xl mx-auto">
+                <form class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-300 mb-2">姓名</label>
+                            <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2">邮箱</label>
+                            <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">主题</label>
+                        <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 mb-2">消息</label>
+                        <textarea rows="6" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn-primary">
+                            发送消息 <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer py-12">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold silver-text mb-4">VERIX</h3>
+                    <p class="text-gray-400">简奢科技，重新定义智能生活体验</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">产品</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">VERIX Watch</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">VERIX Audio</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">VERIX Home</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">公司</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">关于我们</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">新闻中心</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">加入我们</a></li>
+                    </ul>
+                </div>
+                <div>
+    <h4 class="text-lg font-semibold mb-4">关注我们</h4>
+    <div class="flex space-x-4">
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-weibo text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-weixin text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-instagram text-xl"></i>
+        </a>
+        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+            <i class="fab fa-facebook-f text-xl"></i>
+        </a>
+    </div>
+</div>
+            </div>
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
+                <p>&copy; 2024 VERIX Technology. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 灵动岛 -->
+    <div class="fixed bottom-8 left-0 right-0 flex justify-center z-50 transition-transform duration-500" id="dynamic-island-container">
+        <div class="dynamic-island flex items-center justify-between px-6 py-3 rounded-full transition-all duration-300" id="dynamic-island">
+            <span class="text-white mr-3 transition-all duration-300" id="island-text">探索 VERIX</span>
+            <div class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white transition-all duration-300">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏抽屉 - 产品详情 -->
+    <div id="productDetails" class="drawer">
+        <div class="drawer-backdrop"></div>
+        <div class="drawer-content">
+            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('productDetails')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="h-full overflow-y-auto px-6 py-12">
+                <h2 class="text-3xl font-bold mb-6 silver-text">VERIX 产品系列</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" alt="VERIX 产品" class="w-full rounded-lg">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">简奢科技体验</h3>
+                        <p class="text-gray-300 mb-6">
+                            VERIX 致力于将前沿科技与极简设计完美融合，为用户带来无缝的智能生活体验。
+                            我们的产品不仅仅是科技设备，更是生活方式的延伸。
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
+                                <span>采用航空级材料，精湛工艺打造</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
+                                <span>先进的动态跟踪系统算法</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
+                                <span>长达7天的超长续航时间</span>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
+                                <span>IP68 防水防尘等级</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-900 p-6 rounded-lg">
+                        <i class="fas fa-microchip text-blue-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">强大性能</h4>
+                        <p class="text-gray-400">最新一代处理器，性能提升50%</p>
+                    </div>
+                    <div class="bg-gray-900 p-6 rounded-lg">
+                        <i class="fas fa-battery-full text-green-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">超长续航</h4>
+                        <p class="text-gray-400">智能电源管理，续航提升30%</p>
+                    </div>
+                    <div class="bg-gray-900 p-6 rounded-lg">
+                        <i class="fas fa-shield-alt text-red-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">隐私安全</h4>
+                        <p class="text-gray-400">本地数据处理，保障用户隐私</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏抽屉 - 特性详情 1 -->
+    <div id="featureDetails1" class="drawer">
+        <div class="drawer-backdrop"></div>
+        <div class="drawer-content">
+            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('featureDetails1')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="h-full overflow-y-auto px-6 py-12">
+                <h2 class="text-3xl font-bold mb-6 silver-text">隐形智能</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">不打扰的智能体验</h3>
+                        <p class="text-gray-300 mb-6">
+                            VERIX 动态跟踪系统算法能够在不打扰用户的情况下，智能识别用户行为模式，
+                            预测用户需求并提供相应服务。这种"隐形智能"让科技真正成为生活的助手，
+                            而不是干扰。
+                        </p>
+                        <p class="text-gray-300 mb-6">
+                            通过先进的机器学习技术，系统能够不断学习和适应用户习惯，
+                            提供越来越个性化的服务体验。所有数据处理都在设备本地完成，
+                            确保隐私安全的同时提供即时响应。
+                        </p>
+                    </div>
+                    <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/26d120e0ab294382a92460bb27ff1c94~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312922&x-signature=Hq5auniil8%2FVWZ%2B8Ic42HwlvuvU%3D" alt="隐形智能" class="w-full rounded-lg">
+                </div>
+                <div class="bg-gray-900 p-8 rounded-lg">
+                    <h4 class="text-xl font-semibold mb-4">技术特点</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-brain text-purple-500 mt-1 mr-4"></i>
+                            <div>
+                                <h5 class="font-semibold mb-2">AI 行为识别</h5>
+                                <p class="text-gray-400">智能识别用户行为模式和习惯</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-bolt text-yellow-500 mt-1 mr-4"></i>
+                            <div>
+                                <h5 class="font-semibold mb-2">实时响应</h5>
+                                <p class="text-gray-400">毫秒级响应速度，即时满足需求</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-lock text-green-500 mt-1 mr-4"></i>
+                            <div>
+                                <h5 class="font-semibold mb-2">本地处理</h5>
+                                <p class="text-gray-400">所有数据在设备本地安全处理</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-sync-alt text-blue-500 mt-1 mr-4"></i>
+                            <div>
+                                <h5 class="font-semibold mb-2">持续学习</h5>
+                                <p class="text-gray-400">不断学习适应用户习惯和偏好</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 全屏抽屉 - 产品详情（手表） -->
+    <div id="productWatch" class="drawer">
+        <div class="drawer-backdrop"></div>
+        <div class="drawer-content">
+            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('productWatch')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="h-full overflow-y-auto px-6 py-12">
+                <h2 class="text-3xl font-bold mb-6 silver-text">VERIX Watch</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" alt="VERIX Watch" class="w-full rounded-lg">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">简奢智能手表</h3>
+                        <p class="text-gray-300 mb-6">
+                            VERIX Watch 融合了经典腕表设计与现代智能科技，
+                            采用航空级钛金属表壳和蓝宝石玻璃镜面，
+                            搭配意大利真皮表带，彰显非凡品味。
+                        </p>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">显示屏</span>
+                                <span>1.5英寸 AMOLED 触控屏</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">处理器</span>
+                                <span>VERIX S1 芯片</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">续航</span>
+                                <span>最长7天</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">防水等级</span>
+                                <span>IP68</span>
+                            </div>
+                        </div>
+                        <div class="mt-8">
+                            <button class="btn-primary w-full">
+                                立即预订 ¥3,999
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-900 p-6 rounded-lg text-center">
+                        <i class="fas fa-heartbeat text-red-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">健康监测</h4>
+                        <p class="text-gray-400">24小时心率监测、血氧检测、睡眠分析</p>
+                    </div>
+                    <div class="bg-gray-900 p-6 rounded-lg text-center">
+                        <i class="fas fa-running text-green-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">运动追踪</h4>
+                        <p class="text-gray-400">支持100+种运动模式，精准数据记录</p>
+                    </div>
+                    <div class="bg-gray-900 p-6 rounded-lg text-center">
+                        <i class="fas fa-bell text-blue-500 text-2xl mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">智能提醒</h4>
+                        <p class="text-gray-400">来电、短信、应用通知智能提醒</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 其他抽屉可以按照类似方式添加 -->
+
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化质感文字
+            document.querySelectorAll('.premium-text').forEach(el => {
+                el.setAttribute('data-text', el.textContent);
+            });
+            
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+            
+            // 初始化滚动转场效果
+            initTransitionEffect();
+            
+            // 初始化固定与滚动混合布局
+            initFixedScrollLayout();
+            
+            // 初始化灵动岛
+            initDynamicIsland();
+            
+            // 初始化技术展示动画
+            initTechCanvas();
+            
+            // 初始化移动端菜单
+            initMobileMenu();
+            
+            // 初始化滚动动画
+            initScrollAnimations();
+        });
+        
+        // 滚动转场效果
+        function initTransitionEffect() {
+            const container = document.getElementById('transition-container');
+            const image1 = document.getElementById('image1');
+            const image2 = document.getElementById('image2');
+            const transitionLine = document.getElementById('transition-line');
+            
+            window.addEventListener('scroll', () => {
+                const rect = container.getBoundingClientRect();
+                const scrolledDistance = Math.max(0, -rect.top);
+                const totalScrollDistance = container.offsetHeight - window.innerHeight;
+                const scrollProgress = Math.min(1, scrolledDistance / totalScrollDistance);
+                
+                if (scrollProgress <= 0.5) {
+                    const firstTransitionProgress = scrollProgress * 2;
+                    image1.style.width = `${(1 - firstTransitionProgress) * 100}%`;
+                    transitionLine.style.left = `${(1 - firstTransitionProgress) * 100}%`;
+                } else {
+                    image1.style.width = '0%';
+                    const secondTransitionProgress = (scrollProgress - 0.5) * 2;
+                    image2.style.width = `${(1 - secondTransitionProgress) * 100}%`;
+                    transitionLine.style.left = `${(1 - secondTransitionProgress) * 100}%`;
+                }
+            });
+        }
+        
+        // 固定与滚动混合布局
+        function initFixedScrollLayout() {
+            const sections = document.querySelectorAll('[data-section]');
+            const images = document.querySelectorAll('[data-image]');
+            
+            window.addEventListener('scroll', () => {
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const sectionId = section.dataset.section;
+                    
+                    if (rect.top < window.innerHeight/2 && rect.bottom > window.innerHeight/2) {
+                        images.forEach(img => {
+                            if (img.dataset.image === sectionId) {
+                                img.classList.add('active');
+                            } else {
+                                img.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+        
+        // 灵动岛
+        function initDynamicIsland() {
+            const islandContainer = document.getElementById('dynamic-island-container');
+            const islandText = document.getElementById('island-text');
+            const island = document.getElementById('dynamic-island');
+            
+            const sections = [
+                { id: 'hero', text: '探索 VERIX' },
+                { id: 'transition-container', text: '产品系列' },
+                { id: 'features', text: '核心特性' },
+                { id: 'products', text: '产品详情' },
+                { id: 'technology', text: '技术创新' },
+                { id: 'contact', text: '联系我们' }
+            ];
+            
+            function updateIsland(newText) {
+                islandText.style.opacity = '0';
+                islandText.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                    islandText.textContent = newText;
+                    islandText.style.opacity = '1';
+                    islandText.style.transform = 'scale(1)';
+                    
+                    const baseWidth = 120;
+                    const textWidth = islandText.offsetWidth;
+                    island.style.width = `${Math.max(baseWidth, textWidth + 70)}px`;
+                }, 300);
+            }
+            
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.scrollY + window.innerHeight/2;
+                
+                for (let i = sections.length - 1; i >= 0; i--) {
+                    const section = document.getElementById(sections[i].id);
+                    if (section && scrollPosition >= section.offsetTop) {
+                        updateIsland(sections[i].text);
+                        break;
+                    }
+                }
+                
+                // 控制灵动岛显示/隐藏
+                if (scrollPosition > window.innerHeight) {
+                    islandContainer.style.transform = 'translateY(0)';
+                } else {
+                    islandContainer.style.transform = 'translateY(100px)';
+                }
+            });
+            
+            // 灵动岛点击事件
+            island.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+        
+        // 技术展示动画
+        function initTechCanvas() {
+            const canvas = document.getElementById('techCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置canvas尺寸
+            function resizeCanvas() {
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // 粒子系统
+            const particles = [];
+            const particleCount = 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2 + 1,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+            
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // 绘制粒子
+                particles.forEach(particle => {
+                    ctx.beginPath();
+                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 102, 204, ${particle.opacity})`;
+                    ctx.fill();
+                    
+                    // 更新粒子位置
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    
+                    // 边界检测
+                    if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                    if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+                });
+                
+                // 绘制连接线
+                particles.forEach((particle, i) => {
+                    particles.forEach((otherParticle, j) => {
+                        if (i !== j) {
+                            const dx = particle.x - otherParticle.x;
+                            const dy = particle.y - otherParticle.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            if (distance < 100) {
+                                ctx.beginPath();
+                                ctx.moveTo(particle.x, particle.y);
+                                ctx.lineTo(otherParticle.x, otherParticle.y);
+                                ctx.strokeStyle = `rgba(0, 102, 204, ${0.1 * (1 - distance/100)})`;
+                                ctx.lineWidth = 0.5;
+                                ctx.stroke();
+                            }
+                        }
+                    });
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+        
+        // 移动端菜单
+        function initMobileMenu() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuClose = document.getElementById('menu-close');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            
+            menuToggle.addEventListener('click', () => {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            function closeMenu() {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+            
+            menuClose.addEventListener('click', closeMenu);
+            
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        }
+        
+        // 滚动动画
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // 产品卡片动画
+            gsap.utils.toArray('.product-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.8,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: card,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    },
+                    delay: i * 0.2
+                });
+            });
+            
+            // 标题动画
+            gsap.utils.toArray('h2.premium-text').forEach(title => {
+                gsap.from(title, {
+                    y: -30,
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: title,
+                        start: 'top 80%',
+                        toggleActions: 'play none none none'
+                    }
+                });
+            });
+        }
+        
+        // 全屏抽屉功能
+        function openDrawer(id) {
+            const drawer = document.getElementById(id);
+            const backdrop = drawer.querySelector('.drawer-backdrop');
+            const content = drawer.querySelector('.drawer-content');
+            
+            drawer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            backdrop.onclick = () => closeDrawer(id);
+        }
+        
+        function closeDrawer(id) {
+            const drawer = document.getElementById(id);
+            const backdrop = drawer.querySelector('.drawer-backdrop');
+            const content = drawer.querySelector('.drawer-content');
+            
+            drawer.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        
+        // 滚动到指定区域
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>

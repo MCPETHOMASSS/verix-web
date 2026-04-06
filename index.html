@@ -960,18 +960,34 @@
                     <span class="lang-zh">成為首批體驗 VERIX 的先驅者，搶先獲得產品資訊、獨家優惠與測試機會。</span>
                     <span class="lang-en hidden">Be among the first to experience VERIX, get early access to product information, exclusive offers, and testing opportunities.</span>
                 </p>
-                <form class="contact-form fade-in flex flex-col md:flex-row gap-4">
-                    <span class="lang-zh hidden">
-                        <input type="email" placeholder="輸入您的電子郵箱" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
-                    </span>
-                    <span class="lang-en hidden">
-                        <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
-                    </span>
-                    <button type="submit" class="px-8 py-4 bg-transparent text-white border border-white hover:bg-white hover:text-black font-medium transition-all whitespace-nowrap">
+
+                <!-- 已替换的新表单 -->
+                <form id="waitlist-form" action="https://formspree.io/f/xbdpqzlw" method="POST" class="contact-form fade-in flex flex-col md:flex-row gap-4">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        required 
+                        placeholder="Email" 
+                        class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all"
+                    >
+                    <button type="submit" id="submit-btn" class="px-8 py-4 bg-transparent text-white border border-white hover:bg-white hover:text-black font-medium transition-all whitespace-nowrap">
                         <span class="lang-zh">加入邀請名單</span>
                         <span class="lang-en hidden">Join Waitlist</span>
                     </button>
                 </form>
+
+                <!-- 成功提示信息 -->
+                <div id="success-msg" class="hidden text-center fade-in">
+                    <p class="text-xl text-white">
+                        <span class="lang-zh">感謝加入 VERIX 的旅程。</span>
+                        <span class="lang-en hidden">Thanks for joining the VERIX journey.</span>
+                    </p>
+                    <p class="text-gray-500 mt-2">
+                        <span class="lang-zh">我們將在有重大進展時與您聯繫。</span>
+                        <span class="lang-en hidden">We'll reach out when there's major progress.</span>
+                    </p>
+                </div>
+
                 <p class="text-sm text-gray-600 mt-4 fade-in">
                     <span class="lang-zh">我們只發送重要資訊。</span>
                     <span class="lang-en hidden">We only send important updates.</span>
@@ -1119,10 +1135,41 @@
         
         document.addEventListener('DOMContentLoaded', setupScrollReveal);
         
-        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+        // 已替换的表单提交逻辑
+        const form = document.getElementById('waitlist-form');
+        const successMsg = document.getElementById('success-msg');
+        const submitBtn = document.getElementById('submit-btn');
+
+        form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            alert('感謝您的訂閱！我們會盡快與您聯繫。');
-            this.reset();
+            
+            // 改變按鈕狀態，增加交互感
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = currentLang === 'zh' ? '傳送中...' : 'Sending...';
+
+            const data = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: data,
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    // 隱藏表單並優雅顯示成功訊息
+                    form.style.display = 'none';
+                    successMsg.classList.remove('hidden');
+                    form.reset();
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                alert(currentLang === 'zh' ? '抱歉，發生錯誤，請稍後再試。' : 'Sorry, something went wrong. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            }
         });
     </script>
 </body>

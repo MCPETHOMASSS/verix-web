@@ -1,7 +1,8 @@
-<html lang="zh-CN"><head>
+<html lang="zh-CN">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VERIX - 重新定义导航体验</title>
+    <title>VERIX - 重新定義導航體驗</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -29,7 +30,6 @@
             padding: 0 20px;
         }
         
-        /* 导航栏样式 */
         .navbar {
             position: fixed;
             top: 0;
@@ -102,7 +102,6 @@
             cursor: pointer;
         }
         
-        /* 首屏样式 */
         .hero {
             height: 100vh;
             display: flex;
@@ -164,7 +163,6 @@
             left: 0;
         }
         
-        /* 打字效果 */
         .typing-container {
             display: inline-block;
         }
@@ -180,7 +178,6 @@
             50% { border-color: var(--accent-color); }
         }
         
-        /* 鼠标跟随效果 */
         #mouse-follow-container {
             position: fixed;
             top: 0;
@@ -200,7 +197,6 @@
             z-index: 10;
         }
         
-        /* 关于我们部分 */
         .about {
             padding: 100px 0;
             background-color: var(--background-secondary);
@@ -251,7 +247,6 @@
             transform: scale(1.1);
         }
         
-        /* 特点部分 */
         .features {
             padding: 100px 0;
         }
@@ -307,7 +302,6 @@
             line-height: 1.6;
         }
         
-        /* 工作流程部分 */
         .process {
             padding: 100px 0;
             background-color: var(--background-secondary);
@@ -357,7 +351,6 @@
             line-height: 1.6;
         }
         
-        /* 进度部分 */
         .progress {
             padding: 100px 0;
         }
@@ -452,7 +445,6 @@
             line-height: 1.6;
         }
         
-        /* 联系部分 */
         .contact {
             padding: 100px 0;
             background-color: var(--background-secondary);
@@ -511,7 +503,6 @@
             color: var(--background-color);
         }
         
-        /* 页脚 */
         .footer {
             padding: 60px 0;
             border-top: 1px solid var(--background-tertiary);
@@ -555,7 +546,6 @@
             font-size: 14px;
         }
         
-        /* 视差滚动效果 */
         .parallax-bg {
             position: fixed;
             top: 0;
@@ -566,7 +556,6 @@
             transition: transform 0.1s ease-out;
         }
         
-        /* 文字渐入效果 */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -578,7 +567,10 @@
             transform: translateY(0);
         }
         
-        /* 响应式设计 */
+        .hidden {
+            display: none !important;
+        }
+        
         @media (max-width: 768px) {
             .nav-links {
                 position: fixed;
@@ -638,7 +630,6 @@
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
     <nav class="navbar" id="navbar">
         <div class="container">
             <div class="navbar-content">
@@ -663,16 +654,13 @@
             </div>
         </div>
     </nav>
-    
-    <!-- 鼠标跟随容器 -->
+
     <div id="mouse-follow-container"></div>
-    
-    <!-- 视差背景 -->
+
     <div class="parallax-bg" id="parallax-bg">
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30vw; font-weight: 100; color: rgba(212, 175, 55, 0.05);">VERIX</div>
     </div>
-    
-    <!-- 首屏 -->
+
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content fade-in">
@@ -691,8 +679,7 @@
             </div>
         </div>
     </section>
-    
-    <!-- 关于我们 -->
+
     <section class="about" id="about">
         <div class="container">
             <h2 class="section-title fade-in">
@@ -719,13 +706,12 @@
                     </p>
                 </div>
                 <div class="about-image fade-in">
-                    <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/57a8238d0339499390be1044415d6025~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604060315048B8B86C60F6A17E24846&rrcfp=f06b921b&x-expires=1778008518&x-signature=2CUuFE%2BVDTcZKcVpjsbJiKpvpeU%3D" alt="人们在自然中重新连接真实世界">
+                    <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/57a8238d0339499390be1044415d6025~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604060315048B8B86C60F6A17E24846&rrcfp=f06b921b&x-expires=1778008518&x-signature=2CUuFE%2BVDTcZKcVpjsbJiKpvpeU%3D" alt="人們重新連接真實世界">
                 </div>
             </div>
         </div>
     </section>
-    
-    <!-- 特点 -->
+
     <section class="features" id="features">
         <div class="container">
             <h2 class="section-title fade-in">
@@ -811,8 +797,7 @@
             </div>
         </div>
     </section>
-    
-    <!-- 工作流程 -->
+
     <section class="process" id="process">
         <div class="container">
             <h2 class="section-title fade-in">
@@ -867,8 +852,7 @@
             </div>
         </div>
     </section>
-    
-    <!-- 进度 -->
+
     <section class="progress" id="progress">
         <div class="container">
             <h2 class="section-title fade-in">
@@ -902,7 +886,7 @@
                         </div>
                         <h3 class="timeline-title">
                             <span class="lang-zh">核心架構與模型完成</span>
-                            <span class="lang-en hidden">Core Architecture &amp; Models Completed</span>
+                            <span class="lang-en hidden">Core Architecture & Models Completed</span>
                         </h3>
                         <p class="timeline-description">
                             <span class="lang-zh">核心架構已定稿；運動識別模型已完成並可於裝置端部署。</span>
@@ -919,7 +903,7 @@
                         </div>
                         <h3 class="timeline-title">
                             <span class="lang-zh">官方網站與 MVP 建置</span>
-                            <span class="lang-en hidden">Website &amp; MVP Development</span>
+                            <span class="lang-en hidden">Website & MVP Development</span>
                         </h3>
                         <p class="timeline-description">
                             <span class="lang-zh">官方網站與 MVP Landing Page 建置中，加入 Email 訂閱機制，為 Kickstarter 預熱。</span>
@@ -936,7 +920,7 @@
                         </div>
                         <h3 class="timeline-title">
                             <span class="lang-zh">工程原型與量產準備</span>
-                            <span class="lang-en hidden">Engineering Prototype &amp; Production Prep</span>
+                            <span class="lang-en hidden">Engineering Prototype & Production Prep</span>
                         </h3>
                         <p class="timeline-description">
                             <span class="lang-zh">工程原型 demo 打通、PCB 設計外包、App demo 流程開發進行中。</span>
@@ -964,8 +948,7 @@
             </div>
         </div>
     </section>
-    
-    <!-- 联系 -->
+
     <section class="contact" id="contact">
         <div class="container">
             <div class="max-w-3xl mx-auto text-center">
@@ -978,7 +961,12 @@
                     <span class="lang-en hidden">Be among the first to experience VERIX, get early access to product information, exclusive offers, and testing opportunities.</span>
                 </p>
                 <form class="contact-form fade-in flex flex-col md:flex-row gap-4">
-                    <input type="email" id="email" name="email" placeholder="輸入您的電子郵箱" required="" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
+                    <span class="lang-zh hidden">
+                        <input type="email" placeholder="輸入您的電子郵箱" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
+                    </span>
+                    <span class="lang-en hidden">
+                        <input type="email" placeholder="Enter your email" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
+                    </span>
                     <button type="submit" class="px-8 py-4 bg-transparent text-white border border-white hover:bg-white hover:text-black font-medium transition-all whitespace-nowrap">
                         <span class="lang-zh">加入邀請名單</span>
                         <span class="lang-en hidden">Join Waitlist</span>
@@ -991,8 +979,7 @@
             </div>
         </div>
     </section>
-    
-    <!-- 页脚 -->
+
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -1006,36 +993,29 @@
             </div>
             <div class="copyright">
                 <span class="lang-zh">© 2026 VERIX LIMITED. 保留所有權利。</span>
-<span class="lang-en hidden">© 2026 VERIX LIMITED. All Rights Reserved.</span>
+                <span class="lang-en hidden">© 2026 VERIX LIMITED. All Rights Reserved.</span>
             </div>
         </div>
     </footer>
-    
+
     <script>
-        // 语言切换功能
         const langToggle = document.getElementById('lang-toggle');
         const zhElements = document.querySelectorAll('.lang-zh');
         const enElements = document.querySelectorAll('.lang-en');
-        
-        let currentLang = 'zh'; // 默认语言为中文
-        
-        if (langToggle) {
-            langToggle.addEventListener('click', () => {
-                if (currentLang === 'zh') {
-                    // 切换到英文
-                    zhElements.forEach(el => el.classList.add('hidden'));
-                    enElements.forEach(el => el.classList.remove('hidden'));
-                    currentLang = 'en';
-                } else {
-                    // 切换到中文
-                    zhElements.forEach(el => el.classList.remove('hidden'));
-                    enElements.forEach(el => el.classList.add('hidden'));
-                    currentLang = 'zh';
-                }
-            });
-        }
+        let currentLang = 'zh';
 
-        // 导航栏滚动效果
+        langToggle.addEventListener('click', () => {
+            if (currentLang === 'zh') {
+                zhElements.forEach(el => el.classList.add('hidden'));
+                enElements.forEach(el => el.classList.remove('hidden'));
+                currentLang = 'en';
+            } else {
+                zhElements.forEach(el => el.classList.remove('hidden'));
+                enElements.forEach(el => el.classList.add('hidden'));
+                currentLang = 'zh';
+            }
+        });
+
         window.addEventListener('scroll', function() {
             const navbar = document.getElementById('navbar');
             if (window.scrollY > 50) {
@@ -1044,8 +1024,7 @@
                 navbar.classList.remove('scrolled');
             }
         });
-        
-        // 移动菜单
+
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
         const navLinks = document.getElementById('nav-links');
         
@@ -1055,22 +1034,17 @@
                 ? '<i class="fas fa-times"></i>' 
                 : '<i class="fas fa-bars"></i>';
         });
-        
-        // 平滑滚动
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                
                 const targetId = this.getAttribute('href');
                 const targetElement = document.querySelector(targetId);
-                
                 if (targetElement) {
                     window.scrollTo({
                         top: targetElement.offsetTop - 80,
                         behavior: 'smooth'
                     });
-                    
-                    // 关闭移动菜单
                     if (navLinks.classList.contains('active')) {
                         navLinks.classList.remove('active');
                         mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
@@ -1078,8 +1052,7 @@
                 }
             });
         });
-        
-        // 打字效果
+
         const typingEffect = (element, words, typingSpeed = 100, pauseTime = 1000) => {
             let wordIndex = 0;
             let charIndex = 0;
@@ -1089,133 +1062,44 @@
                 const currentWord = words[wordIndex];
               
                 if (isDeleting) {
-                    // 删除字符
                     element.textContent = currentWord.substring(0, charIndex - 1);
                     charIndex--;
                 } else {
-                    // 添加字符
                     element.textContent = currentWord.substring(0, charIndex + 1);
                     charIndex++;
                 }
               
-                // 处理删除/添加状态转换
                 if (!isDeleting && charIndex === currentWord.length) {
                     isDeleting = true;
-                    setTimeout(type, pauseTime); // 完成单词后暂停
+                    setTimeout(type, pauseTime);
                 } else if (isDeleting && charIndex === 0) {
                     isDeleting = false;
-                    wordIndex = (wordIndex + 1) % words.length; // 循环切换单词
-                    setTimeout(type, 200); // 短暂暂停后开始新单词
+                    wordIndex = (wordIndex + 1) % words.length;
+                    setTimeout(type, 200);
                 } else {
-                    // 继续当前操作
                     setTimeout(type, isDeleting ? typingSpeed/2 : typingSpeed);
                 }
             }
           
-            type(); // 启动动画
+            type();
         };
         
-        // 初始化打字效果
-        typingEffect(
-            document.getElementById('typing-text-zh'),
-            ['導航', '交互', '體驗', '科技'],
-            80, 
-            1000
-        );
-        
-        typingEffect(
-            document.getElementById('typing-text-en'),
-            ['Navigation', 'Interaction', 'Experience', 'Technology'],
-            80, 
-            1000
-        );
-        
-        // 鼠标跟随效果
-        const mouseFollowEffect = () => {
-            const container = document.getElementById('mouse-follow-container');
-            let lastX = 0, lastY = 0;
-            const minDistance = 100; // 最小触发距离
-            
-            // 预加载图标
-            const icons = [
-                'fas fa-location-arrow',
-                'fas fa-compass',
-                'fas fa-map-marker-alt',
-                'fas fa-directions',
-                'fas fa-route',
-                'fas fa-walking'
-            ];
-            
-            document.addEventListener('mousemove', (e) => {
-                const currentX = e.clientX;
-                const currentY = e.clientY;
-              
-                // 计算与上次位置的距离
-                const distance = Math.sqrt(
-                    Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2)
-                );
-              
-                // 如果移动距离足够大，创建新元素
-                if (distance > minDistance) {
-                    createFollowElement(currentX, currentY);
-                    lastX = currentX;
-                    lastY = currentY;
-                }
-            });
-          
-            function createFollowElement(x, y) {
-                // 随机选择图标
-                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
-                
-                const element = document.createElement('div');
-                element.className = 'follow-element';
-                element.innerHTML = `<i class="${randomIcon}" style="font-size: 24px; color: rgba(212, 175, 55, 0.3);"></i>`;
-                element.style.top = `${y - 12}px`;
-                element.style.left = `${x - 12}px`;
-              
-                container.appendChild(element);
-              
-                // 强制重排后添加动画类
-                setTimeout(() => {
-                    element.style.opacity = '1';
-                    element.style.transform = 'scale(1.5)';
-                  
-                    // 0.5秒后开始淡出
-                    setTimeout(() => {
-                        element.style.opacity = '0';
-                        element.style.transform = 'scale(0.5)';
-                      
-                        // 动画完成后移除元素
-                        setTimeout(() => {
-                            container.removeChild(element);
-                        }, 500);
-                    }, 500);
-                }, 10);
-            }
-        };
-        
-        // 初始化鼠标跟随效果 - 暂时禁用
-        // mouseFollowEffect();
-        
-        // 视差滚动效果
+        typingEffect(document.getElementById('typing-text-zh'), ['導航', '交互', '體驗', '科技'], 80, 1000);
+        typingEffect(document.getElementById('typing-text-en'), ['Navigation', 'Interaction', 'Experience', 'Technology'], 80, 1000);
+
         const parallaxEffect = () => {
             const background = document.getElementById('parallax-bg');
           
             window.addEventListener('scroll', () => {
-                // 计算滚动百分比
                 const scrollY = window.scrollY;
                 const scrollPercent = Math.min(scrollY / window.innerHeight, 1);
-              
-                // 应用移动效果
                 const moveY = scrollPercent * 100;
                 background.style.transform = `translateY(${moveY}px)`;
             });
         };
         
-        // 初始化视差滚动效果
         parallaxEffect();
         
-        // 文字渐入效果
         const setupScrollReveal = () => {
             const revealElements = document.querySelectorAll('.fade-in');
           
@@ -1226,34 +1110,20 @@
                         revealOnScroll.unobserve(entry.target);
                     }
                 });
-            }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            });
+            }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
           
             revealElements.forEach(element => {
                 revealOnScroll.observe(element);
             });
         };
         
-        // 初始化文字渐入效果
         document.addEventListener('DOMContentLoaded', setupScrollReveal);
         
-        // 表单提交处理
         document.querySelector('.contact-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // 获取表单数据
-            const email = document.getElementById('email').value;
-            
-            // 这里可以添加表单验证逻辑
-            
-            // 模拟表单提交
-            alert(`感谢您的订阅！我们会通过 ${email} 向您发送最新资讯。`);
-            
-            // 重置表单
+            alert('感謝您的訂閱！我們會盡快與您聯繫。');
             this.reset();
         });
     </script>
-
-</body></html>
+</body>
+</html>

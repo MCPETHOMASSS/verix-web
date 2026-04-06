@@ -1,1134 +1,1259 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VERIX - 简奢科技体验</title>
+    <title>VERIX - 重新定义导航体验</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
         
         :root {
-            --primary-bg: #0d0d0d;
-            --secondary-bg: #1a1a1a;
-            --accent-blue: #0066cc;
-            --accent-gold: #d4af37;
-            --text-primary: #ffffff;
-            --text-secondary: #b3b3b3;
+            --primary-color: #f8f8f8;
+            --secondary-color: #aaa;
+            --accent-color: #d4af37;
+            --background-color: #000;
+            --background-secondary: #111;
+            --background-tertiary: #1a1a1a;
         }
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-primary);
+            background-color: var(--background-color);
+            color: var(--primary-color);
             overflow-x: hidden;
         }
         
-        /* 质感文字效果 */
-        .premium-text {
-            position: relative;
-            color: white;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .premium-text::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg, 
-                transparent 0%, 
-                rgba(255, 255, 255, 0.4) 50%, 
-                transparent 100%
-            );
-            background-size: 200% 100%;
-            background-position: 100% 0;
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: shimmer 3s infinite;
-        }
-        
-        @keyframes shimmer {
-            0% { background-position: 100% 0; }
-            100% { background-position: -100% 0; }
-        }
-        
-        .silver-text {
-            background: linear-gradient(to bottom, #ffffff, #c0c0c0, #ffffff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        /* 导航栏 */
+        /* 导航栏样式 */
         .navbar {
-            background: rgba(13, 13, 13, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* 灵动岛 */
-        .dynamic-island {
-            background: rgba(66, 66, 66, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .dynamic-island:hover {
-            background: rgba(102, 102, 102, 0.8);
-            transform: translateY(-2px);
-        }
-        
-        /* 滚动转场效果 */
-        .transition-container {
-            position: relative;
-            height: 300vh;
-        }
-        
-        .transition-sticky {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .transition-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: width 0.1s ease-out;
-        }
-        
-        .transition-line {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: rgba(255, 255, 255, 0.3);
-            z-index: 10;
-        }
-        
-        /* 固定与滚动混合布局 */
-        .fixed-scroll-section {
-            min-height: 300vh;
-            display: flex;
-        }
-        
-        .scroll-content {
-            width: 50%;
-        }
-        
-        .fixed-content {
-            width: 50%;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .feature-section {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 5%;
-        }
-        
-        .feature-image {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.8s ease;
-        }
-        
-        .feature-image.active {
-            opacity: 1;
-        }
-        
-        /* 产品卡片 */
-        .product-card {
-            background: rgba(26, 26, 26, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        
-        /* 全屏抽屉 */
-        .drawer {
             position: fixed;
-            inset: 0;
-            z-index: 100;
-            visibility: hidden;
-        }
-        
-        .drawer-backdrop {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .drawer-content {
-            position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 40px;
+        }
+        
+        .nav-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 300;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
             width: 100%;
-            height: 90vh;
-            background: var(--primary-bg);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-            transform: translateY(100%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .drawer.active .drawer-backdrop {
-            opacity: 1;
-        }
-        
-        .drawer.active .drawer-content {
-            transform: translateY(0);
-        }
-        
-        .drawer.active {
-            visibility: visible;
-        }
-        
-        /* 按钮样式 */
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue), #004499);
+        .mobile-menu-btn {
+            display: none;
+            background: none;
             border: none;
-            color: white;
+            color: var(--primary-color);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* 首屏样式 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 300;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+        
+        .hero p {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: var(--secondary-color);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        
+        .cta-button {
+            display: inline-block;
             padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 500;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            text-decoration: none;
+            font-weight: 300;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
         
-        .btn-primary::before {
+        .cta-button:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+        
+        .cta-button::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            background-color: var(--primary-color);
+            transition: left 0.3s ease;
+            z-index: -1;
         }
         
-        .btn-primary:hover::before {
-            left: 100%;
+        .cta-button:hover::before {
+            left: 0;
         }
         
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0, 102, 204, 0.3);
+        /* 打字效果 */
+        .typing-container {
+            display: inline-block;
         }
         
-        .btn-secondary {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .typing-text {
+            border-right: 2px solid var(--accent-color);
+            padding-right: 5px;
+            animation: blink 1s infinite;
         }
         
-        .btn-secondary:hover {
-            border-color: white;
-            background: rgba(255, 255, 255, 0.1);
+        @keyframes blink {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: var(--accent-color); }
         }
         
-        /* 页脚 */
-        .footer {
-            background: var(--secondary-bg);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* 加载动画 */
-        .loader {
+        /* 鼠标跟随效果 */
+        #mouse-follow-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--primary-bg);
-            display: flex;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .follow-element {
+            position: absolute;
+            width: 200px;
+            height: 250px;
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+        
+        /* 关于我们部分 */
+        .about {
+            padding: 100px 0;
+            background-color: var(--background-secondary);
+        }
+        
+        .section-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 300;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            color: var(--accent-color);
+        }
+        
+        .about-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        
+        .about-image {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .about-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* 特点部分 */
+        .features {
+            padding: 100px 0;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background-color: var(--background-secondary);
+            padding: 40px;
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background-color: var(--accent-color);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleY(1);
+        }
+        
+        .feature-icon {
+            font-size: 36px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card p {
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        
+        /* 工作流程部分 */
+        .process {
+            padding: 100px 0;
+            background-color: var(--background-secondary);
+        }
+        
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+        
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        
-        .loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        
-        .loader-circle {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top: 3px solid var(--accent-blue);
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            background-color: var(--background-tertiary);
+            color: var(--accent-color);
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .process-step:hover .step-number {
+            background-color: var(--accent-color);
+            color: var(--background-color);
+            transform: scale(1.1);
+        }
+        
+        .process-step h3 {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+        
+        .process-step p {
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        
+        /* 进度部分 */
+        .progress {
+            padding: 100px 0;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 1px;
+            height: 100%;
+            background-color: var(--secondary-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 60px;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            padding-right: calc(50% + 30px);
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) {
+            padding-left: calc(50% + 30px);
+        }
+        
+        .timeline-content {
+            background-color: var(--background-secondary);
+            padding: 30px;
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--background-secondary);
+            transform: translateY(-50%);
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid var(--background-secondary);
+            transform: translateY(-50%);
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            top: 30px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-date {
+            color: var(--accent-color);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .timeline-title {
+            font-size: 20px;
+            font-weight: 400;
+            margin-bottom: 15px;
+        }
+        
+        .timeline-description {
+            color: var(--secondary-color);
+            line-height: 1.6;
+        }
+        
+        /* 联系部分 */
+        .contact {
+            padding: 100px 0;
+            background-color: var(--background-secondary);
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 30px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--background-tertiary);
+            border: 1px solid transparent;
+            color: var(--primary-color);
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-button:hover {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+        
+        /* 页脚 */
+        .footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--background-tertiary);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+        
+        .footer-logo span {
+            color: var(--accent-color);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .social-links a {
+            color: var(--secondary-color);
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .copyright {
+            margin-top: 30px;
+            text-align: center;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+        
+        /* 视差滚动效果 */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            transition: transform 0.1s ease-out;
+        }
+        
+        /* 文字渐入效果 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .fixed-scroll-section {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background-color: var(--background-secondary);
                 flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: right 0.3s ease;
+                gap: 30px;
             }
             
-            .scroll-content, .fixed-content {
-                width: 100%;
+            .nav-links.active {
+                right: 0;
             }
             
-            .fixed-content {
-                height: 50vh;
+            .mobile-menu-btn {
+                display: block;
+                z-index: 101;
             }
             
-            .feature-section {
-                height: 50vh;
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
             }
             
-            .premium-text {
-                font-size: 2rem !important;
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                padding-left: 70px;
+                padding-right: 0;
+                text-align: left;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: -10px;
+                border-right: 10px solid var(--background-secondary);
+                border-left: none;
+            }
+            
+            .timeline-dot {
+                left: 30px;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- 加载动画 -->
-    <div class="loader" id="loader">
-        <div class="loader-circle"></div>
-    </div>
-
     <!-- 导航栏 -->
-    <nav class="navbar fixed top-0 left-0 right-0 z-50 py-4">
-        <div class="container mx-auto px-6 flex justify-between items-center">
-            <div class="flex items-center">
-                <h1 class="text-2xl font-bold silver-text">VERIX</h1>
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#products" class="text-gray-300 hover:text-white transition-colors">产品</a>
-                <a href="#features" class="text-gray-300 hover:text-white transition-colors">特性</a>
-                <a href="#technology" class="text-gray-300 hover:text-white transition-colors">技术</a>
-                <a href="#contact" class="text-gray-300 hover:text-white transition-colors">联系我们</a>
-            </div>
-            <div class="md:hidden">
-                <button class="text-white" id="menu-toggle">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="#" class="logo">VER<span>IX</span></a>
+                <div class="nav-links" id="nav-links">
+                    <a href="#home"><span class="lang-zh">首頁</span><span class="lang-en hidden">Home</span></a>
+                    <a href="#about"><span class="lang-zh">關於</span><span class="lang-en hidden">About</span></a>
+                    <a href="#features"><span class="lang-zh">特點</span><span class="lang-en hidden">Features</span></a>
+                    <a href="#process"><span class="lang-zh">流程</span><span class="lang-en hidden">Process</span></a>
+                    <a href="#progress"><span class="lang-zh">進度</span><span class="lang-en hidden">Progress</span></a>
+                    <a href="#contact"><span class="lang-zh">聯繫</span><span class="lang-en hidden">Contact</span></a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="lang-toggle" class="text-sm border border-gray-600 px-3 py-1 rounded hover:bg-gray-900 transition-colors">
+                        <span class="lang-zh">EN</span>
+                        <span class="lang-en hidden">中文</span>
+                    </button>
+                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
-
-    <!-- 移动端菜单 -->
-    <div class="fixed inset-0 bg-black bg-opacity-90 z-40 hidden" id="mobile-menu">
-        <div class="flex justify-end p-6">
-            <button class="text-white" id="menu-close">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-        <div class="flex flex-col items-center space-y-6">
-            <a href="#products" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">产品</a>
-            <a href="#features" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">特性</a>
-            <a href="#technology" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">技术</a>
-            <a href="#contact" class="text-white text-xl hover:text-blue-400 transition-colors mobile-link">联系我们</a>
-        </div>
+    
+    <!-- 鼠标跟随容器 -->
+    <div id="mouse-follow-container"></div>
+    
+    <!-- 视差背景 -->
+    <div class="parallax-bg" id="parallax-bg">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 30vw; font-weight: 100; color: rgba(212, 175, 55, 0.05);">VERIX</div>
     </div>
-
-    <!-- 英雄区域 -->
-    <section class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-black"></div>
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <h1 class="premium-text text-6xl md:text-8xl font-bold mb-6" data-text="VERIX">VERIX</h1>
-            <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-                简奢科技，重新定义智能生活体验
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <button class="btn-primary" onclick="openDrawer('productDetails')">
-                    探索产品 <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-                <button class="btn-secondary" onclick="scrollToSection('features')">
-                    了解更多
-                </button>
-            </div>
-        </div>
-        <div class="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
-            <i class="fas fa-chevron-down text-white/50 text-2xl"></i>
-        </div>
-    </section>
-
-    <!-- 滚动转场效果 -->
-    <section class="transition-container" id="transition-container">
-        <div class="transition-sticky">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" 
-                 alt="VERIX 智能手表" 
-                 class="transition-image z-30" 
-                 id="image1">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
-                 alt="VERIX 无线耳机" 
-                 class="transition-image z-20" 
-                 id="image2">
-            <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4f484b78e0d042cb9325a840b3611252~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=GJ3DRjrBYSUzz6RbzytirqeLXyY%3D" 
-                 alt="VERIX 智能家庭中枢" 
-                 class="transition-image z-10" 
-                 id="image3">
-            <div class="transition-line z-40" id="transition-line"></div>
-        </div>
-    </section>
-
-    <!-- 固定与滚动混合布局 -->
-    <section class="fixed-scroll-section" id="features">
-        <div class="scroll-content">
-            <div class="feature-section" data-section="1">
-                <h3 class="text-3xl font-bold mb-6 silver-text">隐形智能</h3>
-                <p class="text-gray-300 text-lg mb-6">
-                    VERIX 动态跟踪系统算法让智能设备在不打扰您的情况下，
-                    精准识别和预测您的需求，提供无缝的智能体验。
+    
+    <!-- 首屏 -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>
+                    <span class="lang-zh">重新定義<span class="typing-container"><span class="typing-text" id="typing-text-zh">導航</span></span>體驗</span>
+                    <span class="lang-en hidden">Redefining<span class="typing-container"><span class="typing-text" id="typing-text-en">Navigation</span></span>Experience</span>
+                </h1>
+                <p>
+                    <span class="lang-zh">VERIX 透過創新的觸覺技術，讓你在移動中抬起頭，回到真實世界，享受安全、直覺的導航體驗。</span>
+                    <span class="lang-en hidden">VERIX uses innovative tactile technology to keep your head up while moving, reconnecting you with the real world through safe, intuitive navigation.</span>
                 </p>
-                <button class="btn-primary" onclick="openDrawer('featureDetails1')">
-                    了解详情 <i class="fas fa-plus ml-2"></i>
-                </button>
-            </div>
-            <div class="feature-section" data-section="2">
-                <h3 class="text-3xl font-bold mb-6 silver-text">实时处理</h3>
-                <p class="text-gray-300 text-lg mb-6">
-                    采用先进的边缘计算技术，所有数据在设备本地实时处理，
-                    确保隐私安全的同时提供即时响应。
-                </p>
-                <button class="btn-primary" onclick="openDrawer('featureDetails2')">
-                    技术规格 <i class="fas fa-plus ml-2"></i>
-                </button>
-            </div>
-            <div class="feature-section" data-section="3">
-                <h3 class="text-3xl font-bold mb-6 silver-text">精工设计</h3>
-                <p class="text-gray-300 text-lg mb-6">
-                    每一款 VERIX 产品都融合了极简主义美学与精湛工艺，
-                    成为您生活中不可或缺的优雅配饰。
-                </p>
-                <button class="btn-primary" onclick="openDrawer('featureDetails3')">
-                    设计理念 <i class="fas fa-plus ml-2"></i>
-                </button>
-            </div>
-        </div>
-        <div class="fixed-content">
-            <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/26d120e0ab294382a92460bb27ff1c94~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312922&x-signature=Hq5auniil8%2FVWZ%2B8Ic42HwlvuvU%3D" 
-                 alt="健康监测" 
-                 class="feature-image" 
-                 data-image="1">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
-                 alt="音频体验" 
-                 class="feature-image" 
-                 data-image="2">
-            <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/3cc50d58fc354180944129486231d30c~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=2PXY7JwfTDPcLmD0nLrGp3oQHvs%3D" 
-                 alt="运动追踪" 
-                 class="feature-image" 
-                 data-image="3">
-        </div>
-    </section>
-
-    <!-- 产品展示 -->
-    <section class="py-20" id="products">
-        <div class="container mx-auto px-6">
-            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="VERIX 产品系列">VERIX 产品系列</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- 产品卡片 1 -->
-                <div class="product-card rounded-2xl p-8 text-center">
-                    <div class="mb-8">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" 
-                             alt="VERIX Watch" 
-                             class="w-48 h-48 object-contain mx-auto">
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Watch</h3>
-                    <p class="text-gray-400 mb-6">简奢智能手表，融合经典设计与前沿科技</p>
-                    <div class="flex justify-center">
-                        <button class="btn-primary" onclick="openDrawer('productWatch')">
-                            探索 <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 产品卡片 2 -->
-                <div class="product-card rounded-2xl p-8 text-center">
-                    <div class="mb-8">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/764dbd9d1bb7403eab55dca3066da938~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312923&x-signature=7%2BP9HVJPPrb44qwCNdMbCB1PDxY%3D" 
-                             alt="VERIX Audio" 
-                             class="w-48 h-48 object-contain mx-auto">
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Audio</h3>
-                    <p class="text-gray-400 mb-6">真无线蓝牙耳机，沉浸式音频体验</p>
-                    <div class="flex justify-center">
-                        <button class="btn-primary" onclick="openDrawer('productAudio')">
-                            探索 <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- 产品卡片 3 -->
-                <div class="product-card rounded-2xl p-8 text-center">
-                    <div class="mb-8">
-                        <img src="https://p11-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/4f484b78e0d042cb9325a840b3611252~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=GJ3DRjrBYSUzz6RbzytirqeLXyY%3D" 
-                             alt="VERIX Home" 
-                             class="w-48 h-48 object-contain mx-auto">
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 silver-text">VERIX Home</h3>
-                    <p class="text-gray-400 mb-6">智能家庭中枢，掌控您的智慧生活</p>
-                    <div class="flex justify-center">
-                        <button class="btn-primary" onclick="openDrawer('productHome')">
-                            探索 <i class="fas fa-arrow-right ml-2"></i>
-                        </button>
-                    </div>
-                </div>
+                <a href="#about" class="cta-button">
+                    <span class="lang-zh">了解更多</span>
+                    <span class="lang-en hidden">Learn More</span>
+                </a>
             </div>
         </div>
     </section>
-
-    <!-- 技术展示 -->
-    <section class="py-20 bg-gradient-to-b from-black to-gray-900" id="technology">
-        <div class="container mx-auto px-6">
-            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="隐形智能技术">隐形智能技术</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                <div>
-                    <h3 class="text-2xl font-bold mb-6 silver-text">动态跟踪系统算法</h3>
-                    <p class="text-gray-300 mb-6 text-lg">
-                        VERIX 专有的动态跟踪系统算法能够实时分析用户行为模式，
-                        通过先进的机器学习技术，预测用户需求并提供个性化服务。
+    
+    <!-- 关于我们 -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title fade-in">
+                <span class="lang-zh">關於 VERIX</span>
+                <span class="lang-en hidden">About VERIX</span>
+            </h2>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <h3>
+                        <span class="lang-zh">我們的願景</span>
+                        <span class="lang-en hidden">Our Vision</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">在這個資訊爆炸的時代，我們的注意力被螢幕不斷分散。VERIX 致力於改變這一現狀，透過「去視覺化」的導航體驗，讓人們重新連接真實世界。</span>
+                        <span class="lang-en hidden">In this era of information overload, our attention is constantly scattered by screens. VERIX is committed to changing this by providing a "de-visualized" navigation experience that reconnects people with the real world.</span>
                     </p>
-                    <div class="space-y-4">
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
-                            <span>实时行为识别与分析</span>
+                    <p>
+                        <span class="lang-zh">我們相信，最好的技術應該是無形的，它服務於你，而不是佔據你的注意力。我們的穿戴式裝置透過精密的觸覺反饋，為你提供直覺的方向指引，讓導航變得自然而無意識。</span>
+                        <span class="lang-en hidden">We believe that the best technology should be invisible—it serves you rather than demanding your attention. Our wearable device provides intuitive directional guidance through precise tactile feedback, making navigation natural and unconscious.</span>
+                    </p>
+                    <p>
+                        <span class="lang-zh">加入我們，一起探索科技與人性的新平衡，讓每一次出行都成為一次與世界的真實互動。</span>
+                        <span class="lang-en hidden">Join us in exploring a new balance between technology and humanity, making every journey a genuine interaction with the world.</span>
+                    </p>
+                </div>
+                <div class="about-image fade-in">
+                    <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/57a8238d0339499390be1044415d6025~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604060315048B8B86C60F6A17E24846&rrcfp=f06b921b&x-expires=1778008518&x-signature=2CUuFE%2BVDTcZKcVpjsbJiKpvpeU%3D" alt="人们在自然中重新连接真实世界">
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 特点 -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title fade-in">
+                <span class="lang-zh">核心特點</span>
+                <span class="lang-en hidden">Core Features</span>
+            </h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-volume-down"></i>
+                    </div>
+                    <h3>Quiet Tech</h3>
+                    <p>
+                        <span class="lang-zh">科技應該安靜地服務，而非喧賓奪主。我們追求低調、高效的解決方案，讓技術融入生活而不打擾生活。</span>
+                        <span class="lang-en hidden">Technology should serve quietly, not demand attention. We pursue低调, efficient solutions that integrate into life without disturbing it.</span>
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-feather"></i>
+                    </div>
+                    <h3>
+                        <span class="lang-zh">極簡主義</span>
+                        <span class="lang-en hidden">Minimalism</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">少即是多。我們去除多餘，保留本質，讓體驗回歸純粹。每一個設計決策都經過深思熟慮，確保功能與美學的完美平衡。</span>
+                        <span class="lang-en hidden">Less is more. We remove the unnecessary, retain the essential, and return to pure experience. Every design decision is carefully considered to ensure perfect balance between function and aesthetics.</span>
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>
+                        <span class="lang-zh">可信賴</span>
+                        <span class="lang-en hidden">Trustworthy</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">我們將用戶安全置於首位，確保每一次體驗都可靠、精準且安心。我們的技術經過嚴格測試，在各種環境下都能穩定運行。</span>
+                        <span class="lang-en hidden">We put user safety first, ensuring every experience is reliable, precise, and secure. Our technology undergoes rigorous testing to ensure stable operation in all environments.</span>
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-paper"></i>
+                    </div>
+                    <h3>
+                        <span class="lang-zh">觸覺語言</span>
+                        <span class="lang-en hidden">Tactile Language</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">我們開發了專屬的「觸覺語言」，透過精細的振動模式傳達方向與路徑資訊，讓導航變得直覺而自然。</span>
+                        <span class="lang-en hidden">We've developed a proprietary "Tactile Language" that conveys direction and path information through subtle vibration patterns, making navigation intuitive and natural.</span>
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-low-vision"></i>
+                    </div>
+                    <h3>
+                        <span class="lang-zh">低干擾</span>
+                        <span class="lang-en hidden">Low Interference</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">減少視覺干擾，讓你能夠專注於周圍環境。我們的技術設計旨在讓你保持對現實世界的感知，提高安全性和沉浸感。</span>
+                        <span class="lang-en hidden">Reduce visual interference, allowing you to focus on your surroundings. Our technology is designed to maintain your awareness of the real world, enhancing safety and immersion.</span>
+                    </p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <h3>
+                        <span class="lang-zh">日常融合</span>
+                        <span class="lang-en hidden">Daily Integration</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">我們的設備設計時尚、輕便，易於融入日常生活。無論是通勤、徒步還是探索新城市，VERIX 都能成為你的得力助手。</span>
+                        <span class="lang-en hidden">Our device is designed to be stylish, lightweight, and easy to integrate into daily life. Whether commuting, hiking, or exploring a new city, VERIX can be your trusted assistant.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 工作流程 -->
+    <section class="process" id="process">
+        <div class="container">
+            <h2 class="section-title fade-in">
+                <span class="lang-zh">我們的方法</span>
+                <span class="lang-en hidden">Our Approach</span>
+            </h2>
+            <div class="process-steps">
+                <div class="process-step fade-in">
+                    <div class="step-number">1</div>
+                    <h3>
+                        <span class="lang-zh">感測</span>
+                        <span class="lang-en hidden">Sense</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">我們的穿戴式裝置透過先進的感測技術，實時捕捉你的位置與運動狀態，為導航提供精準數據。</span>
+                        <span class="lang-en hidden">Our wearable device captures your position and movement in real-time through advanced sensing technology, providing precise data for navigation.</span>
+                    </p>
+                </div>
+                <div class="process-step fade-in">
+                    <div class="step-number">2</div>
+                    <h3>
+                        <span class="lang-zh">理解動作</span>
+                        <span class="lang-en hidden">Understand Movement</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">邊緣運算技術讓裝置即時處理數據，理解你的步行模式與環境互動，提供個性化的導航體驗。</span>
+                        <span class="lang-en hidden">Edge computing technology allows the device to process data in real-time, understanding your walking patterns and environmental interactions to provide personalized navigation.</span>
+                    </p>
+                </div>
+                <div class="process-step fade-in">
+                    <div class="step-number">3</div>
+                    <h3>
+                        <span class="lang-zh">觸覺語言</span>
+                        <span class="lang-en hidden">Tactile Language</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">我們開發了專屬的「觸覺語言」，透過精細的振動模式傳達方向與路徑資訊，讓導航變得直覺而自然。</span>
+                        <span class="lang-en hidden">We've developed a proprietary "Tactile Language" that conveys direction and path information through subtle vibration patterns, making navigation intuitive and natural.</span>
+                    </p>
+                </div>
+                <div class="process-step fade-in">
+                    <div class="step-number">4</div>
+                    <h3>
+                        <span class="lang-zh">路徑節奏</span>
+                        <span class="lang-en hidden">Path Rhythm</span>
+                    </h3>
+                    <p>
+                        <span class="lang-zh">系統根據你的步行節奏調整提示時機，讓導航體驗自然流暢，猶如本能反應，無需刻意思考。</span>
+                        <span class="lang-en hidden">The system adjusts the timing of prompts according to your walking rhythm, making the navigation experience natural and fluid, like an instinctive response that requires no conscious thought.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 进度 -->
+    <section class="progress" id="progress">
+        <div class="container">
+            <h2 class="section-title fade-in">
+                <span class="lang-zh">我們的進度</span>
+                <span class="lang-en hidden">Our Progress</span>
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">
+                            <span class="lang-zh">2026 年第一季度</span>
+                            <span class="lang-en hidden">Q1 2026</span>
                         </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
-                            <span>本地数据处理，保障隐私安全</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
-                            <span>自适应学习，持续优化体验</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle text-blue-500 mr-4"></i>
-                            <span>低功耗设计，超长续航时间</span>
-                        </div>
+                        <h3 class="timeline-title">
+                            <span class="lang-zh">公司正式成立</span>
+                            <span class="lang-en hidden">Company Founded</span>
+                        </h3>
+                        <p class="timeline-description">
+                            <span class="lang-zh">VERIX LIMITED 在香港正式註冊成立，CI、BR、NNC1 文件齊備。</span>
+                            <span class="lang-en hidden">VERIX LIMITED officially registered in Hong Kong, CI, BR, NNC1 documents completed.</span>
+                        </p>
                     </div>
                 </div>
-                <div class="relative">
-                    <div class="aspect-square rounded-2xl overflow-hidden border border-gray-800">
-                        <canvas id="techCanvas" class="w-full h-full"></canvas>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">
+                            <span class="lang-zh">2026 年第一季度</span>
+                            <span class="lang-en hidden">Q1 2026</span>
+                        </div>
+                        <h3 class="timeline-title">
+                            <span class="lang-zh">核心架構與模型完成</span>
+                            <span class="lang-en hidden">Core Architecture &amp; Models Completed</span>
+                        </h3>
+                        <p class="timeline-description">
+                            <span class="lang-zh">核心架構已定稿；運動識別模型已完成並可於裝置端部署。</span>
+                            <span class="lang-en hidden">Core architecture finalized; motion recognition models completed and deployable on device.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">
+                            <span class="lang-zh">2026 年第二季度</span>
+                            <span class="lang-en hidden">Q2 2026</span>
+                        </div>
+                        <h3 class="timeline-title">
+                            <span class="lang-zh">官方網站與 MVP 建置</span>
+                            <span class="lang-en hidden">Website &amp; MVP Development</span>
+                        </h3>
+                        <p class="timeline-description">
+                            <span class="lang-zh">官方網站與 MVP Landing Page 建置中，加入 Email 訂閱機制，為 Kickstarter 預熱。</span>
+                            <span class="lang-en hidden">Official website and MVP Landing Page under development, adding Email subscription mechanism to warm up for Kickstarter.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">
+                            <span class="lang-zh">2026 年第二季度</span>
+                            <span class="lang-en hidden">Q2 2026</span>
+                        </div>
+                        <h3 class="timeline-title">
+                            <span class="lang-zh">工程原型與量產準備</span>
+                            <span class="lang-en hidden">Engineering Prototype &amp; Production Prep</span>
+                        </h3>
+                        <p class="timeline-description">
+                            <span class="lang-zh">工程原型 demo 打通、PCB 設計外包、App demo 流程開發進行中。</span>
+                            <span class="lang-en hidden">Engineering prototype demo, PCB design outsourcing, and App demo flow development in progress.</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item fade-in">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">
+                            <span class="lang-zh">2026 年第三季度</span>
+                            <span class="lang-en hidden">Q3 2026</span>
+                        </div>
+                        <h3 class="timeline-title">
+                            <span class="lang-zh">Kickstarter 全球首發</span>
+                            <span class="lang-en hidden">Kickstarter Global Launch</span>
+                        </h3>
+                        <p class="timeline-description">
+                            <span class="lang-zh">計劃於 Kickstarter 進行全球首發，將革新導航體驗帶給全球用戶。</span>
+                            <span class="lang-en hidden">Planned product launch on Kickstarter, bringing innovative navigation experience to global users.</span>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- 联系我们 -->
-    <section class="py-20" id="contact">
-        <div class="container mx-auto px-6">
-            <h2 class="premium-text text-4xl md:text-5xl font-bold mb-16 text-center" data-text="联系我们">联系我们</h2>
-            <div class="max-w-3xl mx-auto">
-                <form class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-gray-300 mb-2">姓名</label>
-                            <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-gray-300 mb-2">邮箱</label>
-                            <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-2">主题</label>
-                        <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-gray-300 mb-2">消息</label>
-                        <textarea rows="6" class="w-full bg-gray-900 border border-gray-800 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"></textarea>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn-primary">
-                            发送消息 <i class="fas fa-paper-plane ml-2"></i>
-                        </button>
-                    </div>
+    
+    <!-- 联系 -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="section-title fade-in">
+                    <span class="lang-zh">加入我們的旅程</span>
+                    <span class="lang-en hidden">Join Our Journey</span>
+                </h2>
+                <p class="text-lg text-gray-400 mb-12 fade-in">
+                    <span class="lang-zh">成為首批體驗 VERIX 的先驅者，搶先獲得產品資訊、獨家優惠與測試機會。</span>
+                    <span class="lang-en hidden">Be among the first to experience VERIX, get early access to product information, exclusive offers, and testing opportunities.</span>
+                </p>
+                <form class="contact-form fade-in flex flex-col md:flex-row gap-4">
+                    <input type="email" id="email" name="email" placeholder="輸入您的電子郵箱" required="" class="flex-1 px-6 py-4 bg-black border border-gray-800 focus:border-white focus:outline-none text-white placeholder-gray-600 transition-all">
+                    <button type="submit" class="px-8 py-4 bg-transparent text-white border border-white hover:bg-white hover:text-black font-medium transition-all whitespace-nowrap">
+                        <span class="lang-zh">加入邀請名單</span>
+                        <span class="lang-en hidden">Join Waitlist</span>
+                    </button>
                 </form>
+                <p class="text-sm text-gray-600 mt-4 fade-in">
+                    <span class="lang-zh">我們只發送重要資訊。</span>
+                    <span class="lang-en hidden">We only send important updates.</span>
+                </p>
             </div>
         </div>
     </section>
-
+    
     <!-- 页脚 -->
-    <footer class="footer py-12">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold silver-text mb-4">VERIX</h3>
-                    <p class="text-gray-400">简奢科技，重新定义智能生活体验</p>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">VER<span>IX</span></div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
                 </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">产品</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">VERIX Watch</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">VERIX Audio</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">VERIX Home</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">公司</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><a href="#" class="hover:text-white transition-colors">关于我们</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">新闻中心</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors">加入我们</a></li>
-                    </ul>
-                </div>
-                <div>
-    <h4 class="text-lg font-semibold mb-4">关注我们</h4>
-    <div class="flex space-x-4">
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fab fa-weibo text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fab fa-weixin text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fab fa-instagram text-xl"></i>
-        </a>
-        <a href="#" class="text-gray-400 hover:text-white transition-colors">
-            <i class="fab fa-facebook-f text-xl"></i>
-        </a>
-    </div>
-</div>
             </div>
-            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500">
-                <p>&copy; 2024 VERIX Technology. All rights reserved.</p>
+            <div class="copyright">
+                <span class="lang-zh">© 2026 VERIX LIMITED. 保留所有權利。</span>
+<span class="lang-en hidden">© 2026 VERIX LIMITED. All Rights Reserved.</span>
             </div>
         </div>
     </footer>
-
-    <!-- 灵动岛 -->
-    <div class="fixed bottom-8 left-0 right-0 flex justify-center z-50 transition-transform duration-500" id="dynamic-island-container">
-        <div class="dynamic-island flex items-center justify-between px-6 py-3 rounded-full transition-all duration-300" id="dynamic-island">
-            <span class="text-white mr-3 transition-all duration-300" id="island-text">探索 VERIX</span>
-            <div class="flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white transition-all duration-300">
-                <i class="fas fa-arrow-up"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- 全屏抽屉 - 产品详情 -->
-    <div id="productDetails" class="drawer">
-        <div class="drawer-backdrop"></div>
-        <div class="drawer-content">
-            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('productDetails')">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="h-full overflow-y-auto px-6 py-12">
-                <h2 class="text-3xl font-bold mb-6 silver-text">VERIX 产品系列</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" alt="VERIX 产品" class="w-full rounded-lg">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">简奢科技体验</h3>
-                        <p class="text-gray-300 mb-6">
-                            VERIX 致力于将前沿科技与极简设计完美融合，为用户带来无缝的智能生活体验。
-                            我们的产品不仅仅是科技设备，更是生活方式的延伸。
-                        </p>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
-                                <span>采用航空级材料，精湛工艺打造</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
-                                <span>先进的动态跟踪系统算法</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
-                                <span>长达7天的超长续航时间</span>
-                            </div>
-                            <div class="flex items-start">
-                                <i class="fas fa-check-circle text-blue-500 mt-1 mr-4"></i>
-                                <span>IP68 防水防尘等级</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gray-900 p-6 rounded-lg">
-                        <i class="fas fa-microchip text-blue-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">强大性能</h4>
-                        <p class="text-gray-400">最新一代处理器，性能提升50%</p>
-                    </div>
-                    <div class="bg-gray-900 p-6 rounded-lg">
-                        <i class="fas fa-battery-full text-green-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">超长续航</h4>
-                        <p class="text-gray-400">智能电源管理，续航提升30%</p>
-                    </div>
-                    <div class="bg-gray-900 p-6 rounded-lg">
-                        <i class="fas fa-shield-alt text-red-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">隐私安全</h4>
-                        <p class="text-gray-400">本地数据处理，保障用户隐私</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 全屏抽屉 - 特性详情 1 -->
-    <div id="featureDetails1" class="drawer">
-        <div class="drawer-backdrop"></div>
-        <div class="drawer-content">
-            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('featureDetails1')">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="h-full overflow-y-auto px-6 py-12">
-                <h2 class="text-3xl font-bold mb-6 silver-text">隐形智能</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">不打扰的智能体验</h3>
-                        <p class="text-gray-300 mb-6">
-                            VERIX 动态跟踪系统算法能够在不打扰用户的情况下，智能识别用户行为模式，
-                            预测用户需求并提供相应服务。这种"隐形智能"让科技真正成为生活的助手，
-                            而不是干扰。
-                        </p>
-                        <p class="text-gray-300 mb-6">
-                            通过先进的机器学习技术，系统能够不断学习和适应用户习惯，
-                            提供越来越个性化的服务体验。所有数据处理都在设备本地完成，
-                            确保隐私安全的同时提供即时响应。
-                        </p>
-                    </div>
-                    <img src="https://p26-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/26d120e0ab294382a92460bb27ff1c94~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312922&x-signature=Hq5auniil8%2FVWZ%2B8Ic42HwlvuvU%3D" alt="隐形智能" class="w-full rounded-lg">
-                </div>
-                <div class="bg-gray-900 p-8 rounded-lg">
-                    <h4 class="text-xl font-semibold mb-4">技术特点</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="flex items-start">
-                            <i class="fas fa-brain text-purple-500 mt-1 mr-4"></i>
-                            <div>
-                                <h5 class="font-semibold mb-2">AI 行为识别</h5>
-                                <p class="text-gray-400">智能识别用户行为模式和习惯</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-bolt text-yellow-500 mt-1 mr-4"></i>
-                            <div>
-                                <h5 class="font-semibold mb-2">实时响应</h5>
-                                <p class="text-gray-400">毫秒级响应速度，即时满足需求</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-lock text-green-500 mt-1 mr-4"></i>
-                            <div>
-                                <h5 class="font-semibold mb-2">本地处理</h5>
-                                <p class="text-gray-400">所有数据在设备本地安全处理</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start">
-                            <i class="fas fa-sync-alt text-blue-500 mt-1 mr-4"></i>
-                            <div>
-                                <h5 class="font-semibold mb-2">持续学习</h5>
-                                <p class="text-gray-400">不断学习适应用户习惯和偏好</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 全屏抽屉 - 产品详情（手表） -->
-    <div id="productWatch" class="drawer">
-        <div class="drawer-backdrop"></div>
-        <div class="drawer-content">
-            <button class="absolute right-4 top-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white z-10" onclick="closeDrawer('productWatch')">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="h-full overflow-y-auto px-6 py-12">
-                <h2 class="text-3xl font-bold mb-6 silver-text">VERIX Watch</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                    <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/e0decae56f3542249fcbc9a98e3a6aa1~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=20260329020141D5CE2917C8925D9530D9&rrcfp=f06b921b&x-expires=1777312921&x-signature=WDB96Ym9C9DeMcX7cmY10ynyPr0%3D" alt="VERIX Watch" class="w-full rounded-lg">
-                    <div>
-                        <h3 class="text-2xl font-bold mb-4">简奢智能手表</h3>
-                        <p class="text-gray-300 mb-6">
-                            VERIX Watch 融合了经典腕表设计与现代智能科技，
-                            采用航空级钛金属表壳和蓝宝石玻璃镜面，
-                            搭配意大利真皮表带，彰显非凡品味。
-                        </p>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">显示屏</span>
-                                <span>1.5英寸 AMOLED 触控屏</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">处理器</span>
-                                <span>VERIX S1 芯片</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">续航</span>
-                                <span>最长7天</span>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">防水等级</span>
-                                <span>IP68</span>
-                            </div>
-                        </div>
-                        <div class="mt-8">
-                            <button class="btn-primary w-full">
-                                立即预订 ¥3,999
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gray-900 p-6 rounded-lg text-center">
-                        <i class="fas fa-heartbeat text-red-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">健康监测</h4>
-                        <p class="text-gray-400">24小时心率监测、血氧检测、睡眠分析</p>
-                    </div>
-                    <div class="bg-gray-900 p-6 rounded-lg text-center">
-                        <i class="fas fa-running text-green-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">运动追踪</h4>
-                        <p class="text-gray-400">支持100+种运动模式，精准数据记录</p>
-                    </div>
-                    <div class="bg-gray-900 p-6 rounded-lg text-center">
-                        <i class="fas fa-bell text-blue-500 text-2xl mb-4"></i>
-                        <h4 class="text-lg font-semibold mb-2">智能提醒</h4>
-                        <p class="text-gray-400">来电、短信、应用通知智能提醒</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 其他抽屉可以按照类似方式添加 -->
-
+    
     <script>
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化质感文字
-            document.querySelectorAll('.premium-text').forEach(el => {
-                el.setAttribute('data-text', el.textContent);
+        // 语言切换功能
+        const langToggle = document.getElementById('lang-toggle');
+        const zhElements = document.querySelectorAll('.lang-zh');
+        const enElements = document.querySelectorAll('.lang-en');
+        
+        let currentLang = 'zh'; // 默认语言为中文
+        
+        if (langToggle) {
+            langToggle.addEventListener('click', () => {
+                if (currentLang === 'zh') {
+                    // 切换到英文
+                    zhElements.forEach(el => el.classList.add('hidden'));
+                    enElements.forEach(el => el.classList.remove('hidden'));
+                    currentLang = 'en';
+                } else {
+                    // 切换到中文
+                    zhElements.forEach(el => el.classList.remove('hidden'));
+                    enElements.forEach(el => el.classList.add('hidden'));
+                    currentLang = 'zh';
+                }
             });
-            
-            // 隐藏加载动画
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-            }, 1500);
-            
-            // 初始化滚动转场效果
-            initTransitionEffect();
-            
-            // 初始化固定与滚动混合布局
-            initFixedScrollLayout();
-            
-            // 初始化灵动岛
-            initDynamicIsland();
-            
-            // 初始化技术展示动画
-            initTechCanvas();
-            
-            // 初始化移动端菜单
-            initMobileMenu();
-            
-            // 初始化滚动动画
-            initScrollAnimations();
+        }
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
         });
         
-        // 滚动转场效果
-        function initTransitionEffect() {
-            const container = document.getElementById('transition-container');
-            const image1 = document.getElementById('image1');
-            const image2 = document.getElementById('image2');
-            const transitionLine = document.getElementById('transition-line');
-            
-            window.addEventListener('scroll', () => {
-                const rect = container.getBoundingClientRect();
-                const scrolledDistance = Math.max(0, -rect.top);
-                const totalScrollDistance = container.offsetHeight - window.innerHeight;
-                const scrollProgress = Math.min(1, scrolledDistance / totalScrollDistance);
+        // 移动菜单
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            mobileMenuBtn.innerHTML = navLinks.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
                 
-                if (scrollProgress <= 0.5) {
-                    const firstTransitionProgress = scrollProgress * 2;
-                    image1.style.width = `${(1 - firstTransitionProgress) * 100}%`;
-                    transitionLine.style.left = `${(1 - firstTransitionProgress) * 100}%`;
-                } else {
-                    image1.style.width = '0%';
-                    const secondTransitionProgress = (scrollProgress - 0.5) * 2;
-                    image2.style.width = `${(1 - secondTransitionProgress) * 100}%`;
-                    transitionLine.style.left = `${(1 - secondTransitionProgress) * 100}%`;
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动菜单
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
                 }
             });
-        }
+        });
         
-        // 固定与滚动混合布局
-        function initFixedScrollLayout() {
-            const sections = document.querySelectorAll('[data-section]');
-            const images = document.querySelectorAll('[data-image]');
-            
-            window.addEventListener('scroll', () => {
-                sections.forEach(section => {
-                    const rect = section.getBoundingClientRect();
-                    const sectionId = section.dataset.section;
-                    
-                    if (rect.top < window.innerHeight/2 && rect.bottom > window.innerHeight/2) {
-                        images.forEach(img => {
-                            if (img.dataset.image === sectionId) {
-                                img.classList.add('active');
-                            } else {
-                                img.classList.remove('active');
-                            }
-                        });
-                    }
-                });
-            });
-        }
+        // 打字效果
+        const typingEffect = (element, words, typingSpeed = 100, pauseTime = 1000) => {
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+          
+            function type() {
+                const currentWord = words[wordIndex];
+              
+                if (isDeleting) {
+                    // 删除字符
+                    element.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    // 添加字符
+                    element.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+              
+                // 处理删除/添加状态转换
+                if (!isDeleting && charIndex === currentWord.length) {
+                    isDeleting = true;
+                    setTimeout(type, pauseTime); // 完成单词后暂停
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length; // 循环切换单词
+                    setTimeout(type, 200); // 短暂暂停后开始新单词
+                } else {
+                    // 继续当前操作
+                    setTimeout(type, isDeleting ? typingSpeed/2 : typingSpeed);
+                }
+            }
+          
+            type(); // 启动动画
+        };
         
-        // 灵动岛
-        function initDynamicIsland() {
-            const islandContainer = document.getElementById('dynamic-island-container');
-            const islandText = document.getElementById('island-text');
-            const island = document.getElementById('dynamic-island');
+        // 初始化打字效果
+        typingEffect(
+            document.getElementById('typing-text-zh'),
+            ['導航', '交互', '體驗', '科技'],
+            80, 
+            1000
+        );
+        
+        typingEffect(
+            document.getElementById('typing-text-en'),
+            ['Navigation', 'Interaction', 'Experience', 'Technology'],
+            80, 
+            1000
+        );
+        
+        // 鼠标跟随效果
+        const mouseFollowEffect = () => {
+            const container = document.getElementById('mouse-follow-container');
+            let lastX = 0, lastY = 0;
+            const minDistance = 100; // 最小触发距离
             
-            const sections = [
-                { id: 'hero', text: '探索 VERIX' },
-                { id: 'transition-container', text: '产品系列' },
-                { id: 'features', text: '核心特性' },
-                { id: 'products', text: '产品详情' },
-                { id: 'technology', text: '技术创新' },
-                { id: 'contact', text: '联系我们' }
+            // 预加载图标
+            const icons = [
+                'fas fa-location-arrow',
+                'fas fa-compass',
+                'fas fa-map-marker-alt',
+                'fas fa-directions',
+                'fas fa-route',
+                'fas fa-walking'
             ];
             
-            function updateIsland(newText) {
-                islandText.style.opacity = '0';
-                islandText.style.transform = 'scale(0.8)';
+            document.addEventListener('mousemove', (e) => {
+                const currentX = e.clientX;
+                const currentY = e.clientY;
+              
+                // 计算与上次位置的距离
+                const distance = Math.sqrt(
+                    Math.pow(currentX - lastX, 2) + Math.pow(currentY - lastY, 2)
+                );
+              
+                // 如果移动距离足够大，创建新元素
+                if (distance > minDistance) {
+                    createFollowElement(currentX, currentY);
+                    lastX = currentX;
+                    lastY = currentY;
+                }
+            });
+          
+            function createFollowElement(x, y) {
+                // 随机选择图标
+                const randomIcon = icons[Math.floor(Math.random() * icons.length)];
                 
+                const element = document.createElement('div');
+                element.className = 'follow-element';
+                element.innerHTML = `<i class="${randomIcon}" style="font-size: 24px; color: rgba(212, 175, 55, 0.3);"></i>`;
+                element.style.top = `${y - 12}px`;
+                element.style.left = `${x - 12}px`;
+              
+                container.appendChild(element);
+              
+                // 强制重排后添加动画类
                 setTimeout(() => {
-                    islandText.textContent = newText;
-                    islandText.style.opacity = '1';
-                    islandText.style.transform = 'scale(1)';
-                    
-                    const baseWidth = 120;
-                    const textWidth = islandText.offsetWidth;
-                    island.style.width = `${Math.max(baseWidth, textWidth + 70)}px`;
-                }, 300);
+                    element.style.opacity = '1';
+                    element.style.transform = 'scale(1.5)';
+                  
+                    // 0.5秒后开始淡出
+                    setTimeout(() => {
+                        element.style.opacity = '0';
+                        element.style.transform = 'scale(0.5)';
+                      
+                        // 动画完成后移除元素
+                        setTimeout(() => {
+                            container.removeChild(element);
+                        }, 500);
+                    }, 500);
+                }, 10);
             }
-            
+        };
+        
+        // 初始化鼠标跟随效果 - 暂时禁用
+        // mouseFollowEffect();
+        
+        // 视差滚动效果
+        const parallaxEffect = () => {
+            const background = document.getElementById('parallax-bg');
+          
             window.addEventListener('scroll', () => {
-                const scrollPosition = window.scrollY + window.innerHeight/2;
-                
-                for (let i = sections.length - 1; i >= 0; i--) {
-                    const section = document.getElementById(sections[i].id);
-                    if (section && scrollPosition >= section.offsetTop) {
-                        updateIsland(sections[i].text);
-                        break;
-                    }
-                }
-                
-                // 控制灵动岛显示/隐藏
-                if (scrollPosition > window.innerHeight) {
-                    islandContainer.style.transform = 'translateY(0)';
-                } else {
-                    islandContainer.style.transform = 'translateY(100px)';
-                }
+                // 计算滚动百分比
+                const scrollY = window.scrollY;
+                const scrollPercent = Math.min(scrollY / window.innerHeight, 1);
+              
+                // 应用移动效果
+                const moveY = scrollPercent * 100;
+                background.style.transform = `translateY(${moveY}px)`;
             });
-            
-            // 灵动岛点击事件
-            island.addEventListener('click', () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        }
+        };
         
-        // 技术展示动画
-        function initTechCanvas() {
-            const canvas = document.getElementById('techCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            // 设置canvas尺寸
-            function resizeCanvas() {
-                canvas.width = canvas.offsetWidth;
-                canvas.height = canvas.offsetHeight;
-            }
-            
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            // 粒子系统
-            const particles = [];
-            const particleCount = 100;
-            
-            for (let i = 0; i < particleCount; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2 + 1,
-                    opacity: Math.random() * 0.5 + 0.2
-                });
-            }
-            
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
-                // 绘制粒子
-                particles.forEach(particle => {
-                    ctx.beginPath();
-                    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 102, 204, ${particle.opacity})`;
-                    ctx.fill();
-                    
-                    // 更新粒子位置
-                    particle.x += particle.vx;
-                    particle.y += particle.vy;
-                    
-                    // 边界检测
-                    if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
-                    if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
-                });
-                
-                // 绘制连接线
-                particles.forEach((particle, i) => {
-                    particles.forEach((otherParticle, j) => {
-                        if (i !== j) {
-                            const dx = particle.x - otherParticle.x;
-                            const dy = particle.y - otherParticle.y;
-                            const distance = Math.sqrt(dx * dx + dy * dy);
-                            
-                            if (distance < 100) {
-                                ctx.beginPath();
-                                ctx.moveTo(particle.x, particle.y);
-                                ctx.lineTo(otherParticle.x, otherParticle.y);
-                                ctx.strokeStyle = `rgba(0, 102, 204, ${0.1 * (1 - distance/100)})`;
-                                ctx.lineWidth = 0.5;
-                                ctx.stroke();
-                            }
-                        }
-                    });
-                });
-                
-                requestAnimationFrame(animate);
-            }
-            
-            animate();
-        }
+        // 初始化视差滚动效果
+        parallaxEffect();
         
-        // 移动端菜单
-        function initMobileMenu() {
-            const menuToggle = document.getElementById('menu-toggle');
-            const menuClose = document.getElementById('menu-close');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const mobileLinks = document.querySelectorAll('.mobile-link');
-            
-            menuToggle.addEventListener('click', () => {
-                mobileMenu.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            });
-            
-            function closeMenu() {
-                mobileMenu.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-            
-            menuClose.addEventListener('click', closeMenu);
-            
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', closeMenu);
-            });
-        }
-        
-        // 滚动动画
-        function initScrollAnimations() {
-            gsap.registerPlugin(ScrollTrigger);
-            
-            // 产品卡片动画
-            gsap.utils.toArray('.product-card').forEach((card, i) => {
-                gsap.from(card, {
-                    y: 50,
-                    opacity: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 80%',
-                        toggleActions: 'play none none none'
-                    },
-                    delay: i * 0.2
-                });
-            });
-            
-            // 标题动画
-            gsap.utils.toArray('h2.premium-text').forEach(title => {
-                gsap.from(title, {
-                    y: -30,
-                    opacity: 0,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: title,
-                        start: 'top 80%',
-                        toggleActions: 'play none none none'
+        // 文字渐入效果
+        const setupScrollReveal = () => {
+            const revealElements = document.querySelectorAll('.fade-in');
+          
+            const revealOnScroll = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        revealOnScroll.unobserve(entry.target);
                     }
                 });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
             });
-        }
+          
+            revealElements.forEach(element => {
+                revealOnScroll.observe(element);
+            });
+        };
         
-        // 全屏抽屉功能
-        function openDrawer(id) {
-            const drawer = document.getElementById(id);
-            const backdrop = drawer.querySelector('.drawer-backdrop');
-            const content = drawer.querySelector('.drawer-content');
-            
-            drawer.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            
-            backdrop.onclick = () => closeDrawer(id);
-        }
+        // 初始化文字渐入效果
+        document.addEventListener('DOMContentLoaded', setupScrollReveal);
         
-        function closeDrawer(id) {
-            const drawer = document.getElementById(id);
-            const backdrop = drawer.querySelector('.drawer-backdrop');
-            const content = drawer.querySelector('.drawer-content');
+        // 表单提交处理
+        document.querySelector('.contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
             
-            drawer.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-        
-        // 滚动到指定区域
-        function scrollToSection(sectionId) {
-            const section = document.getElementById(sectionId);
-            if (section) {
-                section.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
+            // 获取表单数据
+            const email = document.getElementById('email').value;
+            
+            // 这里可以添加表单验证逻辑
+            
+            // 模拟表单提交
+            alert(`感谢您的订阅！我们会通过 ${email} 向您发送最新资讯。`);
+            
+            // 重置表单
+            this.reset();
+        });
     </script>
-</body>
-</html>
+
+</body></html>
